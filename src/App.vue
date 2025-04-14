@@ -1,28 +1,53 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="app">
+    <GameBoard
+        ref="gameBoard"
+        @update-score="(newScore) => score = newScore"
+        @game-over="gameOver = true"
+        :game-over="gameOver"
+        :score="score"
+        @restart="restartGame"
+    />
   </div>
 </template>
-//vfgvfhbferfjerferprejgrgewr
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import GameBoard from '@/components/GameBoard.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    GameBoard
+  },
+  data () {
+    return {
+      gameOver: false,
+      score: 0
+    }
+  },
+  methods: {
+    restartGame () {
+      /*this.gameOver = true // Сначала true для триггера
+      this.$nextTick(() => {
+        this.gameOver = false
+        this.score = 0
+      })*/
+      this.gameOver = true
+      this.score = -1 // Форсируем обновление
+
+      this.$nextTick(() => {
+        this.gameOver = false
+        this.score = 0
+        this.$refs.gameBoard.resetGame()
+      })
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.app {
+  height: 100vh;
+  overflow: hidden;
 }
 </style>
